@@ -62,7 +62,7 @@ CornerH.CornerRadius = UDim.new(0, 8)
 CornerH.Parent = HomeBtn
 
 KaitunBtn.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy() -
+    ScreenGui:Destroy() 
     loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/d26f5540308fedf1f069f5f48a4d1e8d426f399fbae4d1f6e882682d0c44e040/download"))()
 end)
 
