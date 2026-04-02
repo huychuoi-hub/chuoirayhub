@@ -1,72 +1,122 @@
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+
+if CoreGui:FindFirstChild("hellocunSelectionUI") then
+    CoreGui:FindFirstChild("hellocunSelectionUI"):Destroy()
+end
+
 local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local KaitunBtn = Instance.new("TextButton")
-local HomeBtn = Instance.new("TextButton")
-local UICorner = Instance.new("UICorner")
-local UIStroke = Instance.new("UIStroke")
-
-ScreenGui.Parent = game.CoreGui
 ScreenGui.Name = "hellocunSelectionUI"
+ScreenGui.Parent = CoreGui
+ScreenGui.IgnoreGuiInset = true
 
+local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-MainFrame.Position = UDim2.new(0.5, -125, 0.5, -60)
-MainFrame.Size = UDim2.new(0, 250, 0, 130)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+MainFrame.BackgroundTransparency = 1 -- Bắt đầu bằng việc ẩn đi
 MainFrame.BorderSizePixel = 0
-MainFrame.Active = true
-MainFrame.Draggable = true -- Có thể kéo di chuyển
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Bắt đầu ở giữa
+MainFrame.Size = UDim2.new(0, 0, 0, 0) -- Bắt đầu với kích thước 0
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.ClipsDescendants = true
 
-UICorner.CornerRadius = UDim.new(0, 10)
-UICorner.Parent = MainFrame
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 15)
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Thickness = 3
+Stroke.Transparency = 1
+Stroke.Color = Color3.fromRGB(0, 255, 255)
 
-UIStroke.Color = Color3.fromRGB(0, 162, 255) -- Màu xanh nước biển
-UIStroke.Thickness = 2
-UIStroke.Parent = MainFrame
-
-Title.Parent = MainFrame
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 50)
 Title.BackgroundTransparency = 1
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Font = Enum.Font.GothamBold
+Title.Font = Enum.Font.GothamBlack
 Title.Text = "HELLOCUN SELECTOR"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 16
+Title.TextSize = 18
+Title.TextTransparency = 1
 
-KaitunBtn.Name = "KaitunBtn"
-KaitunBtn.Parent = MainFrame
-KaitunBtn.BackgroundColor3 = Color3.fromRGB(0, 162, 255)
-KaitunBtn.Position = UDim2.new(0, 15, 0, 50)
-KaitunBtn.Size = UDim2.new(0, 100, 0, 50)
-KaitunBtn.Font = Enum.Font.GothamBold
-KaitunBtn.Text = "KAITUN"
-KaitunBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-KaitunBtn.TextSize = 14
+local function CreateBtn(name, pos, text, color)
+    local btn = Instance.new("TextButton", MainFrame)
+    btn.Name = name
+    btn.Size = UDim2.new(0, 110, 0, 50)
+    btn.Position = pos
+    btn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    btn.Text = text
+    btn.Font = Enum.Font.GothamBold
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 14
+    btn.AutoButtonColor = false
+    btn.TextTransparency = 1
+    btn.BackgroundTransparency = 1
+    
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
+    local bStroke = Instance.new("UIStroke", btn)
+    bStroke.Thickness = 1.5
+    bStroke.Color = color
+    bStroke.Transparency = 1
 
-local CornerK = Instance.new("UICorner")
-CornerK.CornerRadius = UDim.new(0, 8)
-CornerK.Parent = KaitunBtn
+    -- Hover Animation
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.3), {BackgroundColor3 = color}):Play()
+    end)
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(35, 35, 40)}):Play()
+    end)
+    
+    return btn
+end
 
-HomeBtn.Name = "HomeBtn"
-HomeBtn.Parent = MainFrame
-HomeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-HomeBtn.Position = UDim2.new(0, 135, 0, 50)
-HomeBtn.Size = UDim2.new(0, 100, 0, 50)
-HomeBtn.Font = Enum.Font.GothamBold
-HomeBtn.Text = "HOME"
-HomeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-HomeBtn.TextSize = 14
+local KaitunBtn = CreateBtn("KaitunBtn", UDim2.new(0, 15, 0, 70), "KAITUN", Color3.fromRGB(0, 162, 255))
+local HomeBtn = CreateBtn("HomeBtn", UDim2.new(0, 135, 0, 70), "HOME", Color3.fromRGB(255, 50, 50))
 
-local CornerH = Instance.new("UICorner")
-CornerH.CornerRadius = UDim.new(0, 8)
-CornerH.Parent = HomeBtn
+-----------------------------------------------------------
+-- ANIMATION (START)
+-----------------------------------------------------------
+local introInfo = TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+
+TweenService:Create(MainFrame, introInfo, {
+    Size = UDim2.new(0, 260, 0, 140),
+    BackgroundTransparency = 0.1
+}):Play()
+
+TweenService:Create(Stroke, TweenInfo.new(1), {Transparency = 0.1}):Play()
+
+task.wait(0.3)
+local fadeInInfo = TweenInfo.new(0.5)
+TweenService:Create(Title, fadeInInfo, {TextTransparency = 0}):Play()
+TweenService:Create(KaitunBtn, fadeInInfo, {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+TweenService:Create(KaitunBtn.UIStroke, fadeInInfo, {Transparency = 0}):Play()
+TweenService:Create(HomeBtn, fadeInInfo, {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+TweenService:Create(HomeBtn.UIStroke, fadeInInfo, {Transparency = 0}):Play()
+
+-----------------------------------------------------------
+-- ANIMATION (EXIT)
+-----------------------------------------------------------
+local function ExitUI(callback)
+    local outroInfo = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+    TweenService:Create(MainFrame, outroInfo, {
+        Size = UDim2.new(0, 0, 0, 0),
+        BackgroundTransparency = 1
+    }):Play()
+    
+    task.wait(0.5)
+    ScreenGui:Destroy()
+    callback()
+end
+
 
 KaitunBtn.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy() 
-    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/d26f5540308fedf1f069f5f48a4d1e8d426f399fbae4d1f6e882682d0c44e040/download"))()
+    ExitUI(function()
+        loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/d26f5540308fedf1f069f5f48a4d1e8d426f399fbae4d1f6e882682d0c44e040/download"))()
+    end)
 end)
 
 HomeBtn.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy() 
-    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/33902b2ab6354d9ec4bd3bc3fe3172ea6e68fa8ac1da0beac8ea22e2740d7973/download"))()
+    ExitUI(function()
+        loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/33902b2ab6354d9ec4bd3bc3fe3172ea6e68fa8ac1da0beac8ea22e2740d7973/download"))()
+    end)
 end)
+
+MainFrame.Active = true
+MainFrame.Draggable = true
